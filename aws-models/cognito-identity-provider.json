@@ -59,6 +59,9 @@
           "target": "com.amazonaws.cognitoidentityprovider#AdminCreateUser"
         },
         {
+          "target": "com.amazonaws.cognitoidentityprovider#AdminDeleteSoftwareToken"
+        },
+        {
           "target": "com.amazonaws.cognitoidentityprovider#AdminDeleteUser"
         },
         {
@@ -81,6 +84,9 @@
         },
         {
           "target": "com.amazonaws.cognitoidentityprovider#AdminGetUser"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#AdminGetUserAuthFactors"
         },
         {
           "target": "com.amazonaws.cognitoidentityprovider#AdminInitiateAuth"
@@ -233,6 +239,9 @@
           "target": "com.amazonaws.cognitoidentityprovider#DescribeTerms"
         },
         {
+          "target": "com.amazonaws.cognitoidentityprovider#DescribeTermsByClient"
+        },
+        {
           "target": "com.amazonaws.cognitoidentityprovider#DescribeUserImportJob"
         },
         {
@@ -249,6 +258,9 @@
         },
         {
           "target": "com.amazonaws.cognitoidentityprovider#ForgotPassword"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#GetClientToken"
         },
         {
           "target": "com.amazonaws.cognitoidentityprovider#GetCSVHeader"
@@ -2559,6 +2571,73 @@
         }
       }
     },
+    "com.amazonaws.cognitoidentityprovider#AdminDeleteSoftwareToken": {
+      "type": "operation",
+      "input": {
+        "target": "com.amazonaws.cognitoidentityprovider#AdminDeleteSoftwareTokenRequest"
+      },
+      "output": {
+        "target": "com.amazonaws.cognitoidentityprovider#AdminDeleteSoftwareTokenResponse"
+      },
+      "errors": [
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#InternalErrorException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#InvalidParameterException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#NotAuthorizedException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#OperationNotEnabledException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#ResourceNotFoundException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#TooManyRequestsException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#UserNotConfirmedException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#UserNotFoundException"
+        }
+      ],
+      "traits": {
+        "smithy.api#documentation": "<p>Deletes a user's registered time-based one-time password (TOTP) multi-factor\n            authentication (MFA) factor, also known as a software token. After this operation, the\n            user can no longer sign in with TOTP MFA, and can register a new TOTP factor with\n                <code>AssociateSoftwareToken</code>. Use this operation when a user loses access to\n            their TOTP-generating device, for example, a lost or reset phone, and needs to register\n            a new one.</p>\n         <note>\n            <p>Amazon Cognito evaluates Identity and Access Management (IAM) policies in requests for this API operation. For\n    this operation, you must use IAM credentials to authorize requests, and you must\n    grant yourself the corresponding IAM permission in a policy.</p>\n            <p class=\"title\">\n               <b>Learn more</b>\n            </p>\n            <ul>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-signing.html\">Signing Amazon Web Services API Requests</a>\n                  </p>\n               </li>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html\">Using the Amazon Cognito user pools API and user pool endpoints</a>\n                  </p>\n               </li>\n            </ul>\n         </note>"
+      }
+    },
+    "com.amazonaws.cognitoidentityprovider#AdminDeleteSoftwareTokenRequest": {
+      "type": "structure",
+      "members": {
+        "UserPoolId": {
+          "target": "com.amazonaws.cognitoidentityprovider#UserPoolIdType",
+          "traits": {
+            "smithy.api#documentation": "<p>The ID of the user pool where you want to delete the user's software\n            token.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "Username": {
+          "target": "com.amazonaws.cognitoidentityprovider#UsernameType",
+          "traits": {
+            "smithy.api#documentation": "<p>The name of the user that you want to query or modify. The value of this parameter\n            is typically your user's username, but it can be any of their alias attributes. If\n                <code>username</code> isn't an alias attribute in your user pool, this value\n            must be the <code>sub</code> of a local user or the username of a user from a\n            third-party IdP.</p>",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.amazonaws.cognitoidentityprovider#AdminDeleteSoftwareTokenResponse": {
+      "type": "structure",
+      "members": {},
+      "traits": {
+        "smithy.api#output": {}
+      }
+    },
     "com.amazonaws.cognitoidentityprovider#AdminDeleteUser": {
       "type": "operation",
       "input": {
@@ -3073,6 +3152,96 @@
         "smithy.api#documentation": "<p>Given a username, returns details about a user profile in a user pool. You can specify\n            alias attributes in the <code>Username</code> request parameter.</p>\n         <p>This operation contributes to your monthly active user (MAU) count for the purpose of\n            billing.</p>\n         <note>\n            <p>Amazon Cognito evaluates Identity and Access Management (IAM) policies in requests for this API operation. For\n    this operation, you must use IAM credentials to authorize requests, and you must\n    grant yourself the corresponding IAM permission in a policy.</p>\n            <p class=\"title\">\n               <b>Learn more</b>\n            </p>\n            <ul>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-signing.html\">Signing Amazon Web Services API Requests</a>\n                  </p>\n               </li>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html\">Using the Amazon Cognito user pools API and user pool endpoints</a>\n                  </p>\n               </li>\n            </ul>\n         </note>"
       }
     },
+    "com.amazonaws.cognitoidentityprovider#AdminGetUserAuthFactors": {
+      "type": "operation",
+      "input": {
+        "target": "com.amazonaws.cognitoidentityprovider#AdminGetUserAuthFactorsRequest"
+      },
+      "output": {
+        "target": "com.amazonaws.cognitoidentityprovider#AdminGetUserAuthFactorsResponse"
+      },
+      "errors": [
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#InternalErrorException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#InvalidParameterException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#NotAuthorizedException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#OperationNotEnabledException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#ResourceNotFoundException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#TooManyRequestsException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#UserNotFoundException"
+        }
+      ],
+      "traits": {
+        "smithy.api#documentation": "<p>Lists the authentication options for a user in a user pool. Returns the\n            following:</p>\n         <ol>\n            <li>\n               <p>The user's multi-factor authentication (MFA) preferences.</p>\n            </li>\n            <li>\n               <p>The user's options for choice-based authentication with the\n                        <code>USER_AUTH</code> flow.</p>\n            </li>\n         </ol>\n         <note>\n            <p>Amazon Cognito evaluates Identity and Access Management (IAM) policies in requests for this API operation. For\n    this operation, you must use IAM credentials to authorize requests, and you must\n    grant yourself the corresponding IAM permission in a policy.</p>\n            <p class=\"title\">\n               <b>Learn more</b>\n            </p>\n            <ul>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-signing.html\">Signing Amazon Web Services API Requests</a>\n                  </p>\n               </li>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html\">Using the Amazon Cognito user pools API and user pool endpoints</a>\n                  </p>\n               </li>\n            </ul>\n         </note>"
+      }
+    },
+    "com.amazonaws.cognitoidentityprovider#AdminGetUserAuthFactorsRequest": {
+      "type": "structure",
+      "members": {
+        "UserPoolId": {
+          "target": "com.amazonaws.cognitoidentityprovider#UserPoolIdType",
+          "traits": {
+            "smithy.api#documentation": "<p>The ID of the user pool where you want to get information about the user's\n            authentication factors.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "Username": {
+          "target": "com.amazonaws.cognitoidentityprovider#UsernameType",
+          "traits": {
+            "smithy.api#documentation": "<p>The name of the user that you want to query or modify. The value of this parameter\n            is typically your user's username, but it can be any of their alias attributes. If\n                <code>username</code> isn't an alias attribute in your user pool, this value\n            must be the <code>sub</code> of a local user or the username of a user from a\n            third-party IdP.</p>",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.amazonaws.cognitoidentityprovider#AdminGetUserAuthFactorsResponse": {
+      "type": "structure",
+      "members": {
+        "Username": {
+          "target": "com.amazonaws.cognitoidentityprovider#UsernameType",
+          "traits": {
+            "smithy.api#documentation": "<p>The name of the user who is eligible for the authentication factors in the\n            response.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "PreferredMfaSetting": {
+          "target": "com.amazonaws.cognitoidentityprovider#StringType",
+          "traits": {
+            "smithy.api#documentation": "<p>The challenge method that Amazon Cognito returns to the user in response to sign-in requests.\n            Users can prefer SMS message, email message, or TOTP MFA.</p>"
+          }
+        },
+        "UserMFASettingList": {
+          "target": "com.amazonaws.cognitoidentityprovider#UserMFASettingListType",
+          "traits": {
+            "smithy.api#documentation": "<p>The MFA options that are activated for the user. The possible values in this list are\n                <code>SMS_MFA</code>, <code>EMAIL_OTP</code>, and\n            <code>SOFTWARE_TOKEN_MFA</code>.</p>"
+          }
+        },
+        "ConfiguredUserAuthFactors": {
+          "target": "com.amazonaws.cognitoidentityprovider#ConfiguredUserAuthFactorsListType",
+          "traits": {
+            "smithy.api#documentation": "<p>The authentication types that are available to the user with <code>USER_AUTH</code>\n            sign-in, for example <code>[\"PASSWORD\", \"WEB_AUTHN\"]</code>.</p>\n         <p>\n            <code>PASSWORD</code> can only be used as a first authentication factor.\n            <code>SOFTWARE_TOKEN</code> can only be used as an MFA factor.\n            <code>EMAIL_OTP</code>, <code>SMS_OTP</code>, and <code>WEB_AUTHN</code> can be\n            used as either a first authentication factor or an MFA factor. <code>WEB_AUTHN</code>\n            is available as an MFA factor only when passkey MFA is enabled at the user pool\n            level.</p>"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#output": {}
+      }
+    },
     "com.amazonaws.cognitoidentityprovider#AdminGetUserRequest": {
       "type": "structure",
       "members": {
@@ -3382,7 +3551,7 @@
         "DestinationUser": {
           "target": "com.amazonaws.cognitoidentityprovider#ProviderUserIdentifierType",
           "traits": {
-            "smithy.api#documentation": "<p>The existing user in the user pool that you want to assign to the external IdP user\n            account. This user can be a local (Username + Password) Amazon Cognito user pools user or a\n            federated user (for example, a SAML or Facebook user). If the user doesn't exist, Amazon Cognito\n            generates an exception. Amazon Cognito returns this user when the new user (with the linked IdP\n            attribute) signs in.</p>\n         <p>For a native username + password user, the <code>ProviderAttributeValue</code> for the\n                <code>DestinationUser</code> should be the username in the user pool. For a\n            federated user, it should be the provider-specific <code>user_id</code>.</p>\n         <p>The <code>ProviderAttributeName</code> of the <code>DestinationUser</code> is\n            ignored.</p>\n         <p>The <code>ProviderName</code> should be set to <code>Cognito</code> for users in\n            Cognito user pools.</p>\n         <important>\n            <p>All attributes in the DestinationUser profile must be mutable. If you have\n                assigned the user any immutable custom attributes, the operation won't\n                succeed.</p>\n         </important>",
+            "smithy.api#documentation": "<p>The existing user in the user pool that you want to assign to the external IdP user\n            account. This user can be a local (Username + Password) Amazon Cognito user pools user or a\n            federated user (for example, a SAML or Facebook user). If the user doesn't exist, Amazon Cognito\n            generates an exception. Amazon Cognito returns this user when the new user (with the linked IdP\n            attribute) signs in.</p>\n         <p>For a native username + password user, the <code>ProviderAttributeValue</code> for the\n                <code>DestinationUser</code> should be the username in the user pool. For a\n            federated user, it should be the provider-specific <code>user_id</code>.</p>\n         <p>The <code>ProviderAttributeName</code> of the <code>DestinationUser</code> is\n            ignored.</p>\n         <p>The <code>ProviderName</code> should be set to <code>Cognito</code> for users in\n            Cognito user pools.</p>",
             "smithy.api#required": {}
           }
         },
@@ -4703,7 +4872,7 @@
       "traits": {
         "smithy.api#length": {
           "min": 1,
-          "max": 4
+          "max": 5
         }
       }
     },
@@ -5236,6 +5405,12 @@
           "traits": {
             "smithy.api#enumValue": "WEB_AUTHN"
           }
+        },
+        "SOFTWARE_TOKEN": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "SOFTWARE_TOKEN"
+          }
         }
       }
     },
@@ -5678,6 +5853,33 @@
       "traits": {
         "smithy.api#documentation": "<p>The response from the server to the change password request.</p>",
         "smithy.api#output": {}
+      }
+    },
+    "com.amazonaws.cognitoidentityprovider#ClientAuthenticationResultType": {
+      "type": "structure",
+      "members": {
+        "AccessToken": {
+          "target": "com.amazonaws.cognitoidentityprovider#TokenModelType",
+          "traits": {
+            "smithy.api#documentation": "<p>The access token for the requested app client. Present this token to a resource server\n            to authorize a request, using the scopes granted in the token.</p>"
+          }
+        },
+        "ExpiresIn": {
+          "target": "com.amazonaws.cognitoidentityprovider#IntegerType",
+          "traits": {
+            "smithy.api#default": 0,
+            "smithy.api#documentation": "<p>The number of seconds until the access token expires.</p>"
+          }
+        },
+        "TokenType": {
+          "target": "com.amazonaws.cognitoidentityprovider#StringType",
+          "traits": {
+            "smithy.api#documentation": "<p>The type of the token. For example, <code>Bearer</code>.</p>"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "<p>The access token and its metadata from a machine-to-machine (M2M) client credentials\n            grant.</p>"
       }
     },
     "com.amazonaws.cognitoidentityprovider#ClientIdType": {
@@ -7978,7 +8180,7 @@
         "ManagedLoginVersion": {
           "target": "com.amazonaws.cognitoidentityprovider#WrappedIntegerType",
           "traits": {
-            "smithy.api#documentation": "<p>The version of managed login branding that you want to apply to your domain. A value\n            of <code>1</code> indicates hosted UI (classic) and a version of <code>2</code>\n            indicates managed login.</p>\n         <p>Managed login requires that your user pool be configured for any <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-sign-in-feature-plans.html\">feature plan</a> other than <code>Lite</code>.</p>"
+            "smithy.api#documentation": "<p>The version of managed login branding that you want to apply to your domain. A value\n            of <code>1</code> indicates hosted UI (classic) and a version of <code>2</code>\n            indicates managed login.</p>\n         <p>Managed login requires that your user pool be configured for any <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-sign-in-feature-plans.html\">feature plan</a> other than <code>Lite</code>.</p>\n         <p>A <code>ManagedLoginVersion</code> value of <code>2</code> does not activate managed\n            login pages for your app client. When you create an app client programmatically,\n            your app client has no branding style. To use managed login, create a branding style\n            using the <a href=\"https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_CreateManagedLoginBranding.html\">CreateManagedLoginBranding</a> operation. When you use the console, Amazon Cognito assigns\n            a default branding style automatically. When you use the API or an SDK, you must create a\n            branding style yourself.</p>"
           }
         },
         "CustomDomainConfig": {
@@ -8204,7 +8406,7 @@
         "MfaConfiguration": {
           "target": "com.amazonaws.cognitoidentityprovider#UserPoolMfaType",
           "traits": {
-            "smithy.api#documentation": "<p>Sets multi-factor authentication (MFA) to be on, off, or optional. When\n                <code>ON</code>, all users must set up MFA before they can sign in. When\n                <code>OPTIONAL</code>, your application must make a client-side determination of\n            whether a user wants to register an MFA device. For user pools with adaptive\n            authentication with threat protection, choose <code>OPTIONAL</code>.</p>\n         <p>When <code>MfaConfiguration</code> is <code>OPTIONAL</code>, managed login\n            doesn't automatically prompt users to set up MFA. Amazon Cognito generates MFA prompts in\n            API responses and in managed login for users who have chosen and configured a preferred\n            MFA factor.</p>"
+            "smithy.api#documentation": "<p>Sets multi-factor authentication (MFA) to be on, off, or optional. When\n                <code>ON</code>, all users must set up MFA before they can sign in. When\n                <code>OPTIONAL</code>, your application must make a client-side determination of\n            whether a user wants to register an MFA device. For user pools with adaptive\n            authentication with threat protection, choose <code>OPTIONAL</code>.</p>\n         <p>When <code>MfaConfiguration</code> is <code>OPTIONAL</code>, managed login\n            doesn't automatically prompt users to set up MFA. Amazon Cognito generates MFA prompts in\n            API responses and in managed login for users who have chosen and configured a preferred\n            MFA factor.</p>\n         <p>The <code>CreateUserPool</code> operation supports only SMS MFA configuration. If you\n            set <code>MfaConfiguration</code> to either of these values, include an\n                <code>SmsConfiguration</code> in the same request:</p>\n         <ul>\n            <li>\n               <p>\n                  <code>ON</code> \u2013 Requires MFA for all users</p>\n            </li>\n            <li>\n               <p>\n                  <code>OPTIONAL</code> \u2013 Makes MFA optional for each user</p>\n            </li>\n         </ul>\n         <p>If you omit <code>SmsConfiguration</code>, the operation returns an\n                <code>InvalidParameterException</code>. To configure TOTP or email MFA, use the <a href=\"https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_SetUserPoolMfaConfig.html\">SetUserPoolMfaConfig</a> operation. You can also use\n                <code>SetUserPoolMfaConfig</code> to add MFA factors later.</p>"
           }
         },
         "UserAttributeUpdateSettings": {
@@ -9676,6 +9878,81 @@
         "smithy.api#documentation": "<p>Returns details for the requested terms documents ID. For more information, see <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-managed-login.html#managed-login-terms-documents\">Terms documents</a>.</p>\n         <note>\n            <p>Amazon Cognito evaluates Identity and Access Management (IAM) policies in requests for this API operation. For\n    this operation, you must use IAM credentials to authorize requests, and you must\n    grant yourself the corresponding IAM permission in a policy.</p>\n            <p class=\"title\">\n               <b>Learn more</b>\n            </p>\n            <ul>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-signing.html\">Signing Amazon Web Services API Requests</a>\n                  </p>\n               </li>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html\">Using the Amazon Cognito user pools API and user pool endpoints</a>\n                  </p>\n               </li>\n            </ul>\n         </note>"
       }
     },
+    "com.amazonaws.cognitoidentityprovider#DescribeTermsByClient": {
+      "type": "operation",
+      "input": {
+        "target": "com.amazonaws.cognitoidentityprovider#DescribeTermsByClientRequest"
+      },
+      "output": {
+        "target": "com.amazonaws.cognitoidentityprovider#DescribeTermsByClientResponse"
+      },
+      "errors": [
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#InternalErrorException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#InvalidParameterException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#NotAuthorizedException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#OperationNotEnabledException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#ResourceNotFoundException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#TooManyRequestsException"
+        }
+      ],
+      "traits": {
+        "smithy.api#documentation": "<p>Returns details for the terms documents that are associated with an app client,\n            identified by the app client ID, user pool ID, and terms name. For\n            more information, see <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-managed-login.html#managed-login-terms-documents\">Terms documents</a>.</p>\n         <p>To call <code>DescribeTermsByClient</code>, you must have the\n            <code>cognito-idp:DescribeTermsByClient</code> Identity and Access Management (IAM) permission. This\n            operation additionally validates your permission for\n            <code>cognito-idp:DescribeTerms</code>, the action for . As a result, an IAM policy that denies\n            <code>cognito-idp:DescribeTerms</code> also denies requests to\n            <code>DescribeTermsByClient</code>.</p>\n         <note>\n            <p>Amazon Cognito evaluates Identity and Access Management (IAM) policies in requests for this API operation. For\n    this operation, you must use IAM credentials to authorize requests, and you must\n    grant yourself the corresponding IAM permission in a policy.</p>\n            <p class=\"title\">\n               <b>Learn more</b>\n            </p>\n            <ul>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-signing.html\">Signing Amazon Web Services API Requests</a>\n                  </p>\n               </li>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html\">Using the Amazon Cognito user pools API and user pool endpoints</a>\n                  </p>\n               </li>\n            </ul>\n         </note>"
+      }
+    },
+    "com.amazonaws.cognitoidentityprovider#DescribeTermsByClientRequest": {
+      "type": "structure",
+      "members": {
+        "ClientId": {
+          "target": "com.amazonaws.cognitoidentityprovider#ClientIdType",
+          "traits": {
+            "smithy.api#documentation": "<p>The ID of the app client that the terms documents are associated with.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "UserPoolId": {
+          "target": "com.amazonaws.cognitoidentityprovider#UserPoolIdType",
+          "traits": {
+            "smithy.api#documentation": "<p>The ID of the user pool that contains the terms documents that you want to\n            describe.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "TermsName": {
+          "target": "com.amazonaws.cognitoidentityprovider#TermsNameType",
+          "traits": {
+            "smithy.api#documentation": "<p>The name of the terms documents that you want to describe.</p>",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.amazonaws.cognitoidentityprovider#DescribeTermsByClientResponse": {
+      "type": "structure",
+      "members": {
+        "Terms": {
+          "target": "com.amazonaws.cognitoidentityprovider#TermsType",
+          "traits": {
+            "smithy.api#documentation": "<p>A summary of the requested terms documents. Includes a unique identifier for later\n            changes to the terms documents.</p>"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#output": {}
+      }
+    },
     "com.amazonaws.cognitoidentityprovider#DescribeTermsRequest": {
       "type": "structure",
       "members": {
@@ -9913,7 +10190,7 @@
         }
       ],
       "traits": {
-        "smithy.api#documentation": "<p>Given a user pool domain name, returns information about the domain\n            configuration.</p>\n         <note>\n            <p>Amazon Cognito evaluates Identity and Access Management (IAM) policies in requests for this API operation. For\n    this operation, you must use IAM credentials to authorize requests, and you must\n    grant yourself the corresponding IAM permission in a policy.</p>\n            <p class=\"title\">\n               <b>Learn more</b>\n            </p>\n            <ul>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-signing.html\">Signing Amazon Web Services API Requests</a>\n                  </p>\n               </li>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html\">Using the Amazon Cognito user pools API and user pool endpoints</a>\n                  </p>\n               </li>\n            </ul>\n         </note>"
+        "smithy.api#documentation": "<p>Given a user pool domain name, returns information about the domain\n            configuration.</p>\n         <note>\n            <p>This operation doesn't return results when you query a prefix domain in a\n                secondary Region. Prefix domains are Region-specific and can only be described in\n                the Region where they were created. To describe a prefix domain for a replica user\n                pool, make the request to the primary Region's endpoint.</p>\n         </note>\n         <note>\n            <p>Amazon Cognito evaluates Identity and Access Management (IAM) policies in requests for this API operation. For\n    this operation, you must use IAM credentials to authorize requests, and you must\n    grant yourself the corresponding IAM permission in a policy.</p>\n            <p class=\"title\">\n               <b>Learn more</b>\n            </p>\n            <ul>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-signing.html\">Signing Amazon Web Services API Requests</a>\n                  </p>\n               </li>\n               <li>\n                  <p>\n                     <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html\">Using the Amazon Cognito user pools API and user pool endpoints</a>\n                  </p>\n               </li>\n            </ul>\n         </note>"
       }
     },
     "com.amazonaws.cognitoidentityprovider#DescribeUserPoolDomainRequest": {
@@ -11202,6 +11479,109 @@
         "smithy.api#output": {}
       }
     },
+    "com.amazonaws.cognitoidentityprovider#GetClientToken": {
+      "type": "operation",
+      "input": {
+        "target": "com.amazonaws.cognitoidentityprovider#GetClientTokenRequest"
+      },
+      "output": {
+        "target": "com.amazonaws.cognitoidentityprovider#GetClientTokenResponse"
+      },
+      "errors": [
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#ForbiddenException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#InternalErrorException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#InvalidParameterException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#NotAuthorizedException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#OperationNotEnabledException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#ResourceNotFoundException"
+        },
+        {
+          "target": "com.amazonaws.cognitoidentityprovider#TooManyRequestsException"
+        }
+      ],
+      "traits": {
+        "smithy.api#documentation": "<p>Issues an access token for machine-to-machine (M2M) authorization. Your app client\n            provides its client ID and secret, and receives an access token that authorizes requests\n            to your resource servers. <code>GetClientToken</code> provides the same functionality as\n            the OAuth2 client-credentials grant; both authorize an application rather than a user.</p>\n         <p>To use this operation, you must configure the app client with a client secret and\n            enable the <code>ALLOW_CLIENT_TOKEN_AUTH</code> authentication flow. The\n            <code>ALLOW_CLIENT_TOKEN_AUTH</code> flow is mutually exclusive with user authentication\n            flows. It must be the only authentication flow that you configure for the app client. For\n            more information, see <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-define-resource-servers.html\">Scopes, M2M, and resource servers</a>.</p>\n         <note>\n            <p>Amazon Cognito doesn't evaluate Identity and Access Management (IAM) policies in requests for this API operation. For\n    this operation, you can't use IAM credentials to authorize requests, and you can't\n    grant IAM permissions in policies. For more information about authorization models in\n    Amazon Cognito, see <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html\">Using the Amazon Cognito user pools API and user pool endpoints</a>.</p>\n         </note>",
+        "smithy.api#examples": [
+          {
+            "title": "Example \u2013 Get an access token for machine-to-machine authorization",
+            "documentation": "The following example gets an access token for the app client 1example23456789 with the custom scope solar-system-data/asteroids.add.",
+            "input": {
+              "ClientId": "1example23456789",
+              "Secret": "exampleClientSecret123EXAMPLE",
+              "Scopes": [
+                "solar-system-data/asteroids.add"
+              ]
+            },
+            "output": {
+              "ClientAuthenticationResult": {
+                "AccessToken": "eyJra456defEXAMPLE",
+                "ExpiresIn": 3600,
+                "TokenType": "Bearer"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "com.amazonaws.cognitoidentityprovider#GetClientTokenRequest": {
+      "type": "structure",
+      "members": {
+        "ClientId": {
+          "target": "com.amazonaws.cognitoidentityprovider#ClientIdType",
+          "traits": {
+            "smithy.api#documentation": "<p>The ID of the app client that requests the access token. The app client must have a\n            client secret and the <code>ALLOW_CLIENT_TOKEN_AUTH</code> authentication flow.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "Secret": {
+          "target": "com.amazonaws.cognitoidentityprovider#ClientSecretType",
+          "traits": {
+            "smithy.api#documentation": "<p>An active secret for the app client.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "Scopes": {
+          "target": "com.amazonaws.cognitoidentityprovider#ScopeListType",
+          "traits": {
+            "smithy.api#documentation": "<p>The custom scopes to authorize in the access token, in the format\n                <code>resource-server-identifier/scope-name</code>. Each scope must belong to a\n            resource server in your user pool. If you don't specify any scopes, Amazon Cognito authorizes the\n            scopes that are configured for the app client.</p>"
+          }
+        },
+        "ClientMetadata": {
+          "target": "com.amazonaws.cognitoidentityprovider#ClientMetadataType",
+          "traits": {
+            "smithy.api#documentation": "<p>A map of custom key-value pairs that you can provide as input for any custom workflows\n            that this action triggers. You create custom workflows by assigning Lambda functions\n            to user pool triggers.</p>\n         <p>When Amazon Cognito invokes any of these functions, it passes a JSON payload, which the\n            function receives as input. This payload contains a <code>clientMetadata</code>\n            attribute that provides the data that you assigned to the ClientMetadata parameter in\n            your request. In your function code, you can process the <code>clientMetadata</code>\n            value to enhance your workflow for your specific needs.</p>\n         <p>To review the Lambda trigger types that Amazon Cognito invokes at runtime with API requests, see <a href=\"https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-working-with-lambda-triggers.html#lambda-triggers-by-event\">\nConnecting API actions to Lambda triggers</a> in the <i>Amazon Cognito Developer Guide</i>.</p>\n         <note>\n            <p>When you use the <code>ClientMetadata</code> parameter, note that Amazon Cognito won't do the\n                following:</p>\n            <ul>\n               <li>\n                  <p>Store the <code>ClientMetadata</code> value. This data is available only\n                        to Lambda triggers that are assigned to a user pool to support custom\n                        workflows. If your user pool configuration doesn't include triggers, the\n                        <code>ClientMetadata</code> parameter serves no purpose.</p>\n               </li>\n               <li>\n                  <p>Validate the <code>ClientMetadata</code> value.</p>\n               </li>\n               <li>\n                  <p>Encrypt the <code>ClientMetadata</code> value. Don't send sensitive\n                        information in this parameter.</p>\n               </li>\n            </ul>\n         </note>"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.amazonaws.cognitoidentityprovider#GetClientTokenResponse": {
+      "type": "structure",
+      "members": {
+        "ClientAuthenticationResult": {
+          "target": "com.amazonaws.cognitoidentityprovider#ClientAuthenticationResultType",
+          "traits": {
+            "smithy.api#documentation": "<p>The access token that Amazon Cognito issues for the app client, and its metadata.</p>"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#output": {}
+      }
+    },
     "com.amazonaws.cognitoidentityprovider#GetDevice": {
       "type": "operation",
       "input": {
@@ -12040,7 +12420,7 @@
         "ConfiguredUserAuthFactors": {
           "target": "com.amazonaws.cognitoidentityprovider#ConfiguredUserAuthFactorsListType",
           "traits": {
-            "smithy.api#documentation": "<p>The authentication types that are available to the user with <code>USER_AUTH</code>\n            sign-in, for example <code>[\"PASSWORD\", \"WEB_AUTHN\"]</code>.</p>"
+            "smithy.api#documentation": "<p>The authentication types that are available to the user with <code>USER_AUTH</code>\n            sign-in, for example <code>[\"PASSWORD\", \"WEB_AUTHN\"]</code>.</p>\n         <p>\n            <code>PASSWORD</code> can only be used as a first authentication factor.\n            <code>SOFTWARE_TOKEN</code> can only be used as an MFA factor.\n            <code>EMAIL_OTP</code>, <code>SMS_OTP</code>, and <code>WEB_AUTHN</code> can be\n            used as either a first authentication factor or an MFA factor. <code>WEB_AUTHN</code>\n            is available as an MFA factor only when passkey MFA is enabled at the user pool\n            level.</p>"
           }
         }
       },
@@ -16948,7 +17328,7 @@
         "AllowedFirstAuthFactors": {
           "target": "com.amazonaws.cognitoidentityprovider#AllowedFirstAuthFactorsListType",
           "traits": {
-            "smithy.api#documentation": "<p>The sign-in methods that a user pool supports as the first factor. You can permit\n            users to start authentication with a standard username and password, or with other\n            one-time password and hardware factors.</p>"
+            "smithy.api#documentation": "<p>The sign-in methods that a user pool supports as the first factor. You can permit\n            users to start authentication with a standard username and password, or with other\n            one-time password and hardware factors.</p>\n         <note>\n            <p>\n               <code>SOFTWARE_TOKEN</code> is not currently supported as a first auth factor.\n                Do not include this value in <code>AllowedFirstAuthFactors</code>.</p>\n         </note>"
           }
         }
       },

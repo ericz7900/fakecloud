@@ -1,6 +1,109 @@
 {
   "smithy": "2.0",
   "shapes": {
+    "com.amazonaws.sagemaker#AIAdapterId": {
+      "type": "string",
+      "traits": {
+        "smithy.api#documentation": "<p>A unique identifier for a LoRA adapter within a recommendation job request. The ID must start and end with an alphanumeric character, can contain hyphens between alphanumeric characters, and can be up to 63 characters long. This ID is used as the inference component name when the adapter is deployed.</p>",
+        "smithy.api#length": {
+          "min": 1,
+          "max": 63
+        },
+        "smithy.api#pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"
+      }
+    },
+    "com.amazonaws.sagemaker#AIAdapterModelPackageEntry": {
+      "type": "structure",
+      "members": {
+        "AdapterId": {
+          "target": "com.amazonaws.sagemaker#AIAdapterId",
+          "traits": {
+            "smithy.api#clientOptional": {},
+            "smithy.api#documentation": "<p>A unique identifier for the adapter. This ID is used as the inference component name when the adapter is deployed. The ID must start and end with an alphanumeric character, can contain hyphens between alphanumeric characters, and can be up to 63 characters long.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "ModelPackageArn": {
+          "target": "com.amazonaws.sagemaker#ModelPackageArn",
+          "traits": {
+            "smithy.api#clientOptional": {},
+            "smithy.api#documentation": "<p>The Amazon Resource Name (ARN) of the model package that contains the LoRA adapter artifacts.</p>",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "<p>A LoRA adapter entry identified by a model package ARN.</p>"
+      }
+    },
+    "com.amazonaws.sagemaker#AIAdapterModelPackageEntryList": {
+      "type": "list",
+      "member": {
+        "target": "com.amazonaws.sagemaker#AIAdapterModelPackageEntry"
+      },
+      "traits": {
+        "smithy.api#length": {
+          "min": 1,
+          "max": 10
+        }
+      }
+    },
+    "com.amazonaws.sagemaker#AIAdapterS3Entry": {
+      "type": "structure",
+      "members": {
+        "AdapterId": {
+          "target": "com.amazonaws.sagemaker#AIAdapterId",
+          "traits": {
+            "smithy.api#clientOptional": {},
+            "smithy.api#documentation": "<p>A unique identifier for the adapter. This ID is used as the inference component name when the adapter is deployed. The ID must start and end with an alphanumeric character, can contain hyphens between alphanumeric characters, and can be up to 63 characters long.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "S3Uri": {
+          "target": "com.amazonaws.sagemaker#S3Uri",
+          "traits": {
+            "smithy.api#clientOptional": {},
+            "smithy.api#documentation": "<p>The Amazon S3 URI of the directory that contains the LoRA adapter artifacts in PEFT format.</p>",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "<p>A LoRA adapter entry identified by an Amazon S3 URI.</p>"
+      }
+    },
+    "com.amazonaws.sagemaker#AIAdapterS3EntryList": {
+      "type": "list",
+      "member": {
+        "target": "com.amazonaws.sagemaker#AIAdapterS3Entry"
+      },
+      "traits": {
+        "smithy.api#length": {
+          "min": 1,
+          "max": 10
+        }
+      }
+    },
+    "com.amazonaws.sagemaker#AIAdapterSource": {
+      "type": "union",
+      "members": {
+        "ModelPackageArns": {
+          "target": "com.amazonaws.sagemaker#AIAdapterModelPackageEntryList",
+          "traits": {
+            "smithy.api#documentation": "<p>A list of LoRA adapters identified by their model package ARNs. Use this when your adapters were produced by a SageMaker AI fine-tuning workflow that registers model packages.</p>"
+          }
+        },
+        "S3Uris": {
+          "target": "com.amazonaws.sagemaker#AIAdapterS3EntryList",
+          "traits": {
+            "smithy.api#documentation": "<p>A list of LoRA adapters identified by their Amazon S3 URIs. Use this when your adapters are stored as raw artifacts in Amazon S3.</p>"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "<p>The source of LoRA adapters for an AI recommendation job. This is a union type \u2014 specify exactly one of the members.</p>"
+      }
+    },
     "com.amazonaws.sagemaker#AIBenchmarkEndpoint": {
       "type": "structure",
       "members": {
@@ -472,10 +575,40 @@
           "traits": {
             "smithy.api#documentation": "<p>The expected performance metrics for this recommendation.</p>"
           }
+        },
+        "AdapterDetails": {
+          "target": "com.amazonaws.sagemaker#AIRecommendationAdapterDetails",
+          "traits": {
+            "smithy.api#documentation": "<p>The LoRA adapter details for this recommendation. This field contains both the model package ARNs and Amazon S3 URIs for each adapter, regardless of which form was originally supplied. This field is absent when the job was created without LoRA adapters.</p>"
+          }
         }
       },
       "traits": {
         "smithy.api#documentation": "<p>An optimization recommendation generated by an AI recommendation job.</p>"
+      }
+    },
+    "com.amazonaws.sagemaker#AIRecommendationAdapterDetails": {
+      "type": "structure",
+      "members": {
+        "ModelPackageArns": {
+          "target": "com.amazonaws.sagemaker#AIAdapterModelPackageEntryList",
+          "traits": {
+            "smithy.api#clientOptional": {},
+            "smithy.api#documentation": "<p>The list of LoRA adapters with their model package ARNs.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "S3Uris": {
+          "target": "com.amazonaws.sagemaker#AIAdapterS3EntryList",
+          "traits": {
+            "smithy.api#clientOptional": {},
+            "smithy.api#documentation": "<p>The list of LoRA adapters with their Amazon S3 URIs.</p>",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "<p>The per-recommendation LoRA adapter details. Contains both the model package ARNs and Amazon S3 URIs for each adapter, regardless of which form was originally supplied in the request. When you supply only Amazon S3 URIs, Amazon SageMaker AI creates model packages on your behalf.</p>"
       }
     },
     "com.amazonaws.sagemaker#AIRecommendationAllowOptimization": {
@@ -563,6 +696,12 @@
           "target": "com.amazonaws.sagemaker#EnvironmentMap",
           "traits": {
             "smithy.api#documentation": "<p>The environment variables for the deployment.</p>"
+          }
+        },
+        "MinCpuMemoryRequiredInMb": {
+          "target": "com.amazonaws.sagemaker#AIRecommendationMinCpuMemoryRequiredInMb",
+          "traits": {
+            "smithy.api#documentation": "<p>The minimum host (CPU) memory, in MiB, to reserve for each model copy when deploying the recommendation as an Inference Component. This value maps to the Inference Component's <code>ComputeResourceRequirements$MinMemoryRequiredInMb</code> field.</p>"
           }
         }
       },
@@ -809,6 +948,42 @@
             "smithy.api#enumValue": "ml.g6e.48xlarge"
           }
         },
+        "ML_G7_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.2xlarge"
+          }
+        },
+        "ML_G7_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.4xlarge"
+          }
+        },
+        "ML_G7_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.8xlarge"
+          }
+        },
+        "ML_G7_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.12xlarge"
+          }
+        },
+        "ML_G7_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.24xlarge"
+          }
+        },
+        "ML_G7_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.48xlarge"
+          }
+        },
         "ML_G7E_2XLARGE": {
           "target": "smithy.api#Unit",
           "traits": {
@@ -848,18 +1023,30 @@
         "ML_P3_2XLARGE": {
           "target": "smithy.api#Unit",
           "traits": {
+            "smithy.api#deprecated": {
+              "message": "ml.p3.* is deprecated in SageMaker and no longer deployable; requests are rejected.",
+              "since": "2026-07-01"
+            },
             "smithy.api#enumValue": "ml.p3.2xlarge"
           }
         },
         "ML_P3_8XLARGE": {
           "target": "smithy.api#Unit",
           "traits": {
+            "smithy.api#deprecated": {
+              "message": "ml.p3.* is deprecated in SageMaker and no longer deployable; requests are rejected.",
+              "since": "2026-07-01"
+            },
             "smithy.api#enumValue": "ml.p3.8xlarge"
           }
         },
         "ML_P3_16XLARGE": {
           "target": "smithy.api#Unit",
           "traits": {
+            "smithy.api#deprecated": {
+              "message": "ml.p3.* is deprecated in SageMaker and no longer deployable; requests are rejected.",
+              "since": "2026-07-01"
+            },
             "smithy.api#enumValue": "ml.p3.16xlarge"
           }
         },
@@ -1041,6 +1228,14 @@
           "traits": {
             "smithy.api#enumValue": "cost"
           }
+        }
+      }
+    },
+    "com.amazonaws.sagemaker#AIRecommendationMinCpuMemoryRequiredInMb": {
+      "type": "integer",
+      "traits": {
+        "smithy.api#range": {
+          "min": 1
         }
       }
     },
@@ -3613,6 +3808,42 @@
             "smithy.api#enumValue": "ml.p5.4xlarge"
           }
         },
+        "ML_G7_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.2xlarge"
+          }
+        },
+        "ML_G7_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.4xlarge"
+          }
+        },
+        "ML_G7_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.8xlarge"
+          }
+        },
+        "ML_G7_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.12xlarge"
+          }
+        },
+        "ML_G7_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.24xlarge"
+          }
+        },
+        "ML_G7_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.48xlarge"
+          }
+        },
         "ML_G7E_2XLARGE": {
           "target": "smithy.api#Unit",
           "traits": {
@@ -3849,6 +4080,16 @@
             "smithy.api#enumValue": "Canvas"
           }
         }
+      }
+    },
+    "com.amazonaws.sagemaker#ApplicationArn": {
+      "type": "string",
+      "traits": {
+        "smithy.api#length": {
+          "min": 1,
+          "max": 128
+        },
+        "smithy.api#pattern": "^arn:aws[a-z\\-]*:sso::[0-9]{12}:application/(sso)?ins-[a-zA-Z0-9.-]{16}/apl-[a-zA-Z0-9.-]{16}$"
       }
     },
     "com.amazonaws.sagemaker#ApprovalDescription": {
@@ -9774,7 +10015,7 @@
         "PatchingStrategy": {
           "target": "com.amazonaws.sagemaker#ClusterPatchingStrategy",
           "traits": {
-            "smithy.api#documentation": "<p>The strategy for applying patches to instances in the group.</p>",
+            "smithy.api#documentation": "<p>The strategy for applying patches to instances in the group.</p> <ul> <li> <p> <code>WhenIdle</code>: Cordons all instances and patches each instance as it becomes idle (no running jobs). Each instance is uncordoned immediately after patching and becomes available for new jobs. If instances do not become idle, they remain on the previous AMI version. You can then use UpdateClusterSoftware with the desired ImageReleaseVersion to manually update the remaining instances.</p> </li> <li> <p> <code>WhenAllIdle</code>: Cordons all instances and waits for all to become idle before patching. All instances are uncordoned after patching completes. If not all instances become idle, no patching occurs and all instances remain on the previous AMI version.</p> </li> </ul>",
             "smithy.api#required": {}
           }
         },
@@ -9801,7 +10042,7 @@
         "PatchingStrategy": {
           "target": "com.amazonaws.sagemaker#ClusterPatchingStrategy",
           "traits": {
-            "smithy.api#documentation": "<p>The strategy used for applying patches to instances in the group.</p>"
+            "smithy.api#documentation": "<p>The strategy used for applying patches to instances in the group.</p> <ul> <li> <p> <code>WhenIdle</code>: Cordons all instances and patches each instance as it becomes idle (no running jobs). Each instance is uncordoned immediately after patching and becomes available for new jobs. If instances do not become idle, they remain on the previous AMI version. You can then use UpdateClusterSoftware with the desired ImageReleaseVersion to manually update the remaining instances.</p> </li> <li> <p> <code>WhenAllIdle</code>: Cordons all instances and waits for all to become idle before patching. All instances are uncordoned after patching completes. If not all instances become idle, no patching occurs and all instances remain on the previous AMI version.</p> </li> </ul>"
           }
         },
         "CurrentPatchSchedule": {
@@ -11874,6 +12115,318 @@
           "target": "smithy.api#Unit",
           "traits": {
             "smithy.api#enumValue": "ml.c8g.48xlarge"
+          }
+        },
+        "ML_C6A_LARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.large"
+          }
+        },
+        "ML_C6A_XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.xlarge"
+          }
+        },
+        "ML_C6A_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.2xlarge"
+          }
+        },
+        "ML_C6A_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.4xlarge"
+          }
+        },
+        "ML_C6A_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.8xlarge"
+          }
+        },
+        "ML_C6A_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.12xlarge"
+          }
+        },
+        "ML_C6A_16XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.16xlarge"
+          }
+        },
+        "ML_C6A_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.24xlarge"
+          }
+        },
+        "ML_C6A_32XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.32xlarge"
+          }
+        },
+        "ML_C6A_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.c6a.48xlarge"
+          }
+        },
+        "ML_M6A_LARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.large"
+          }
+        },
+        "ML_M6A_XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.xlarge"
+          }
+        },
+        "ML_M6A_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.2xlarge"
+          }
+        },
+        "ML_M6A_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.4xlarge"
+          }
+        },
+        "ML_M6A_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.8xlarge"
+          }
+        },
+        "ML_M6A_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.12xlarge"
+          }
+        },
+        "ML_M6A_16XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.16xlarge"
+          }
+        },
+        "ML_M6A_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.24xlarge"
+          }
+        },
+        "ML_M6A_32XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.32xlarge"
+          }
+        },
+        "ML_M6A_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6a.48xlarge"
+          }
+        },
+        "ML_M6G_MEDIUM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6g.medium"
+          }
+        },
+        "ML_M6G_LARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6g.large"
+          }
+        },
+        "ML_M6G_XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6g.xlarge"
+          }
+        },
+        "ML_M6G_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6g.2xlarge"
+          }
+        },
+        "ML_M6G_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6g.4xlarge"
+          }
+        },
+        "ML_M6G_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6g.8xlarge"
+          }
+        },
+        "ML_M6G_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6g.12xlarge"
+          }
+        },
+        "ML_M6G_16XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m6g.16xlarge"
+          }
+        },
+        "ML_M7G_MEDIUM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m7g.medium"
+          }
+        },
+        "ML_M7G_LARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m7g.large"
+          }
+        },
+        "ML_M7G_XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m7g.xlarge"
+          }
+        },
+        "ML_M7G_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m7g.2xlarge"
+          }
+        },
+        "ML_M7G_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m7g.4xlarge"
+          }
+        },
+        "ML_M7G_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m7g.8xlarge"
+          }
+        },
+        "ML_M7G_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m7g.12xlarge"
+          }
+        },
+        "ML_M7G_16XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m7g.16xlarge"
+          }
+        },
+        "ML_M8G_MEDIUM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.medium"
+          }
+        },
+        "ML_M8G_LARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.large"
+          }
+        },
+        "ML_M8G_XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.xlarge"
+          }
+        },
+        "ML_M8G_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.2xlarge"
+          }
+        },
+        "ML_M8G_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.4xlarge"
+          }
+        },
+        "ML_M8G_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.8xlarge"
+          }
+        },
+        "ML_M8G_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.12xlarge"
+          }
+        },
+        "ML_M8G_16XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.16xlarge"
+          }
+        },
+        "ML_M8G_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.24xlarge"
+          }
+        },
+        "ML_M8G_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.m8g.48xlarge"
+          }
+        },
+        "ML_G7_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.2xlarge"
+          }
+        },
+        "ML_G7_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.4xlarge"
+          }
+        },
+        "ML_G7_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.8xlarge"
+          }
+        },
+        "ML_G7_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.12xlarge"
+          }
+        },
+        "ML_G7_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.24xlarge"
+          }
+        },
+        "ML_G7_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.48xlarge"
           }
         }
       }
@@ -14890,6 +15443,12 @@
           "target": "com.amazonaws.sagemaker#AIRecommendationComputeSpec",
           "traits": {
             "smithy.api#documentation": "<p>The compute resource specification for the recommendation job. You can specify up to 3 instance types to consider, and optionally provide capacity reservation configuration.</p>"
+          }
+        },
+        "AdapterSource": {
+          "target": "com.amazonaws.sagemaker#AIAdapterSource",
+          "traits": {
+            "smithy.api#documentation": "<p>The LoRA adapter source for the recommendation job. Specify either a list of model package ARNs or Amazon S3 URIs for your LoRA adapters. When this parameter is absent, the recommendation job runs without LoRA adapter support.</p>"
           }
         },
         "Tags": {
@@ -18338,6 +18897,12 @@
             "smithy.api#required": {}
           }
         },
+        "KmsKeyId": {
+          "target": "com.amazonaws.sagemaker#KmsKeyId",
+          "traits": {
+            "smithy.api#documentation": "<p>The ID of the Amazon Web Services KMS key used to encrypt the data at rest associated with the MLflow App. If you don't specify a value, the MLflow App is not encrypted with a customer-managed key.</p>"
+          }
+        },
         "ModelRegistrationMode": {
           "target": "com.amazonaws.sagemaker#ModelRegistrationMode",
           "traits": {
@@ -19711,6 +20276,12 @@
           "traits": {
             "smithy.api#documentation": "<p>A VPC in Amazon VPC that your optimized model has access to.</p>"
           }
+        },
+        "TrainingPlanArns": {
+          "target": "com.amazonaws.sagemaker#OptimizationJobTrainingPlanArns",
+          "traits": {
+            "smithy.api#documentation": "<p>The Amazon Resource Name (ARN) of the training plan to use for this optimization job.</p> <p>When you use reserved capacity from a training plan, the optimization job runs on that reserved capacity instead of on-demand capacity. If you omit this field, the job uses on-demand capacity. You can specify at most one training plan.</p> <p>For more information about how to reserve GPU capacity for your optimization jobs using Amazon SageMaker Training Plans, see <a href=\"https://docs.aws.amazon.com/sagemaker/latest/dg/reserve-capacity-with-training-plans.html\">Reserve capacity with training plans</a>.</p>"
+          }
         }
       },
       "traits": {
@@ -19865,11 +20436,17 @@
             "smithy.api#documentation": "<p>Configuration settings for the SageMaker Partner AI App.</p>"
           }
         },
+        "IdcConfig": {
+          "target": "com.amazonaws.sagemaker#IdcConfigInput",
+          "traits": {
+            "smithy.api#documentation": "<p>Specifies the Amazon Web Services IAM Identity Center configuration for the SageMaker Partner AI App. Specify this parameter when <code>AuthType</code> is <code>IDC</code>. Apps that use <code>IAM</code> authorization don't use this parameter.</p>"
+          }
+        },
         "AuthType": {
           "target": "com.amazonaws.sagemaker#PartnerAppAuthType",
           "traits": {
             "smithy.api#clientOptional": {},
-            "smithy.api#documentation": "<p>The authorization type that users use to access the SageMaker Partner AI App.</p>",
+            "smithy.api#documentation": "<p>The authorization type that users use to access the SageMaker Partner AI App. Valid values:</p> <ul> <li> <p> <code>IAM</code>: Users access the SageMaker Partner AI App with their Amazon Web Services IAM identity.</p> </li> <li> <p> <code>IDC</code>: Users access the SageMaker Partner AI App with their Amazon Web Services IAM Identity Center identity. Specify the Identity Center instance to use in <code>IdcConfig</code>.</p> </li> </ul>",
             "smithy.api#required": {}
           }
         },
@@ -22387,7 +22964,7 @@
       "traits": {
         "smithy.api#length": {
           "min": 1,
-          "max": 2
+          "max": 3
         }
       }
     },
@@ -25523,6 +26100,12 @@
           "target": "com.amazonaws.sagemaker#AIRecommendationComputeSpec",
           "traits": {
             "smithy.api#documentation": "<p>The compute resource specification for the recommendation job.</p>"
+          }
+        },
+        "AdapterSource": {
+          "target": "com.amazonaws.sagemaker#AIAdapterSource",
+          "traits": {
+            "smithy.api#documentation": "<p>The LoRA adapter source that you specified when you created the recommendation job. This field is absent when you created the job without LoRA adapters.</p>"
           }
         },
         "CreationTime": {
@@ -30971,6 +31554,12 @@
             "smithy.api#documentation": "<p>The Amazon Resource Name (ARN) for an IAM role in your account that the MLflow App uses to access the artifact store in Amazon S3.</p>"
           }
         },
+        "KmsKeyId": {
+          "target": "com.amazonaws.sagemaker#KmsKeyId",
+          "traits": {
+            "smithy.api#documentation": "<p>The ID of the Amazon Web Services KMS key used to encrypt the data at rest associated with the MLflow App. This field is absent if the MLflow App is not encrypted with a customer-managed key.</p>"
+          }
+        },
         "Status": {
           "target": "com.amazonaws.sagemaker#MlflowAppStatus",
           "traits": {
@@ -32799,6 +33388,12 @@
           "traits": {
             "smithy.api#documentation": "<p>A VPC in Amazon VPC that your optimized model has access to.</p>"
           }
+        },
+        "TrainingPlanArns": {
+          "target": "com.amazonaws.sagemaker#OptimizationJobTrainingPlanArns",
+          "traits": {
+            "smithy.api#documentation": "<p>The Amazon Resource Name (ARN) of the training plan associated with this optimization job. This field appears only when you specified a training plan when you created the job. Optimization jobs that use on-demand capacity don't return this field.</p>"
+          }
         }
       },
       "traits": {
@@ -32928,7 +33523,7 @@
         "AuthType": {
           "target": "com.amazonaws.sagemaker#PartnerAppAuthType",
           "traits": {
-            "smithy.api#documentation": "<p>The authorization type that users use to access the SageMaker Partner AI App.</p>"
+            "smithy.api#documentation": "<p>The authorization type that users use to access the SageMaker Partner AI App. Valid values:</p> <ul> <li> <p> <code>IAM</code>: Users access the SageMaker Partner AI App with their Amazon Web Services IAM identity.</p> </li> <li> <p> <code>IDC</code>: Users access the SageMaker Partner AI App with their Amazon Web Services IAM Identity Center identity.</p> </li> </ul>"
           }
         },
         "EnableIamSessionBasedIdentity": {
@@ -32959,6 +33554,12 @@
           "target": "com.amazonaws.sagemaker#AvailableUpgrade",
           "traits": {
             "smithy.api#documentation": "<p>A map of available minor version upgrades for the SageMaker Partner AI App. The key is the semantic version number, and the value is a list of release notes for that version. A null value indicates no upgrades are available.</p>"
+          }
+        },
+        "IdcConfig": {
+          "target": "com.amazonaws.sagemaker#IdcConfigOutput",
+          "traits": {
+            "smithy.api#documentation": "<p>Contains the Amazon Web Services IAM Identity Center configuration for the SageMaker Partner AI App, including the Identity Center instance and the Identity Center application that SageMaker creates for the app. The service returns this field for apps that use <code>IDC</code> authorization.</p>"
           }
         }
       },
@@ -42753,6 +43354,42 @@
         "smithy.api#documentation": "<p>Use this parameter to specify a supported global condition key that is added to the IAM policy.</p>"
       }
     },
+    "com.amazonaws.sagemaker#IdcConfigInput": {
+      "type": "structure",
+      "members": {
+        "InstanceArn": {
+          "target": "com.amazonaws.sagemaker#InstanceArn",
+          "traits": {
+            "smithy.api#documentation": "<p>The ARN of the Amazon Web Services IAM Identity Center instance that the SageMaker Partner AI App uses to authenticate users.</p>",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "<p>Specifies the Amazon Web Services IAM Identity Center configuration to use for a SageMaker Partner AI App that uses <code>IDC</code> authorization.</p>"
+      }
+    },
+    "com.amazonaws.sagemaker#IdcConfigOutput": {
+      "type": "structure",
+      "members": {
+        "InstanceArn": {
+          "target": "com.amazonaws.sagemaker#InstanceArn",
+          "traits": {
+            "smithy.api#documentation": "<p>The ARN of the Amazon Web Services IAM Identity Center instance that the SageMaker Partner AI App uses to authenticate users.</p>",
+            "smithy.api#required": {}
+          }
+        },
+        "ApplicationArn": {
+          "target": "com.amazonaws.sagemaker#ApplicationArn",
+          "traits": {
+            "smithy.api#documentation": "<p>The ARN of the Amazon Web Services IAM Identity Center application that SageMaker creates for the SageMaker Partner AI App.</p>"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "<p>Contains the Amazon Web Services IAM Identity Center configuration of a SageMaker Partner AI App that uses <code>IDC</code> authorization.</p>"
+      }
+    },
     "com.amazonaws.sagemaker#IdempotencyToken": {
       "type": "string",
       "traits": {
@@ -44938,6 +45575,16 @@
         }
       }
     },
+    "com.amazonaws.sagemaker#InstanceArn": {
+      "type": "string",
+      "traits": {
+        "smithy.api#length": {
+          "min": 1,
+          "max": 128
+        },
+        "smithy.api#pattern": "^arn:aws[a-z\\-]*:sso:::instance/(sso)?ins-[a-zA-Z0-9.-]{16}$"
+      }
+    },
     "com.amazonaws.sagemaker#InstanceCount": {
       "type": "integer",
       "traits": {
@@ -46422,6 +47069,42 @@
           "target": "smithy.api#Unit",
           "traits": {
             "smithy.api#enumValue": "ml.g6.48xlarge"
+          }
+        },
+        "ML_G7E_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.2xlarge"
+          }
+        },
+        "ML_G7E_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.4xlarge"
+          }
+        },
+        "ML_G7E_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.8xlarge"
+          }
+        },
+        "ML_G7E_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.12xlarge"
+          }
+        },
+        "ML_G7E_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.24xlarge"
+          }
+        },
+        "ML_G7E_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.48xlarge"
           }
         },
         "ML_P5_4XLARGE": {
@@ -63221,6 +63904,18 @@
           "traits": {
             "smithy.api#enumValue": "Updating"
           }
+        },
+        "PendingMaintenance": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "PendingMaintenance"
+          }
+        },
+        "InMaintenance": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "InMaintenance"
+          }
         }
       }
     },
@@ -63698,7 +64393,7 @@
       "traits": {
         "smithy.api#length": {
           "min": 1,
-          "max": 2
+          "max": 3
         }
       }
     },
@@ -63726,7 +64421,7 @@
         "StorageType": {
           "target": "com.amazonaws.sagemaker#StorageType",
           "traits": {
-            "smithy.api#documentation": "<p>Option for different tiers of low latency storage for real-time data retrieval.</p> <ul> <li> <p> <code>Standard</code>: A managed low latency data store for feature groups.</p> </li> <li> <p> <code>InMemory</code>: A managed data store for feature groups that supports very low latency retrieval. </p> </li> </ul>"
+            "smithy.api#documentation": "<p>Option for different tiers of low latency storage for real-time data retrieval.</p> <ul> <li> <p> <code>Standard</code>: A managed low latency data store for feature groups.</p> </li> <li> <p> <code>Standard_V2</code>: A managed low latency data store for feature groups that supports partial updates to individual features using the <a href=\"https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_feature_store_UpdateRecord.html\">UpdateRecord</a> operation. Choose this storage type at feature group creation time if your use case requires updating specific feature values without rewriting the entire record.</p> </li> <li> <p> <code>InMemory</code>: A managed data store for feature groups that supports very low latency retrieval.</p> </li> </ul>"
           }
         }
       },
@@ -63741,6 +64436,12 @@
           "target": "com.amazonaws.sagemaker#TtlDuration",
           "traits": {
             "smithy.api#documentation": "<p>Time to live duration, where the record is hard deleted after the expiration time is reached; <code>ExpiresAt</code> = <code>EventTime</code> + <code>TtlDuration</code>. For information on HardDelete, see the <a href=\"https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_feature_store_DeleteRecord.html\">DeleteRecord</a> API in the Amazon SageMaker API Reference guide.</p>"
+          }
+        },
+        "StorageType": {
+          "target": "com.amazonaws.sagemaker#StorageType",
+          "traits": {
+            "smithy.api#documentation": "<p>The online store storage type to migrate the feature group to. Use this parameter to migrate an existing feature group from <code>Standard</code> to <code>Standard_V2</code> storage format, enabling support for the <a href=\"https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_feature_store_UpdateRecord.html\">UpdateRecord</a> operation. Migration is a one-way operation and cannot be reversed.</p>"
           }
         }
       },
@@ -64148,6 +64849,84 @@
           "traits": {
             "smithy.api#enumValue": "ml.trn1n.32xlarge"
           }
+        },
+        "ML_P6_B200_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.p6-b200.48xlarge"
+          }
+        },
+        "ML_G7E_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.2xlarge"
+          }
+        },
+        "ML_G7E_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.4xlarge"
+          }
+        },
+        "ML_G7E_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.8xlarge"
+          }
+        },
+        "ML_G7E_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.12xlarge"
+          }
+        },
+        "ML_G7E_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.24xlarge"
+          }
+        },
+        "ML_G7E_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7e.48xlarge"
+          }
+        },
+        "ML_G7_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.2xlarge"
+          }
+        },
+        "ML_G7_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.4xlarge"
+          }
+        },
+        "ML_G7_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.8xlarge"
+          }
+        },
+        "ML_G7_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.12xlarge"
+          }
+        },
+        "ML_G7_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.24xlarge"
+          }
+        },
+        "ML_G7_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.48xlarge"
+          }
         }
       }
     },
@@ -64367,6 +65146,19 @@
       },
       "traits": {
         "smithy.api#documentation": "<p>Summarizes an optimization job by providing some of its key properties.</p>"
+      }
+    },
+    "com.amazonaws.sagemaker#OptimizationJobTrainingPlanArns": {
+      "type": "list",
+      "member": {
+        "target": "com.amazonaws.sagemaker#TrainingPlanArn"
+      },
+      "traits": {
+        "smithy.api#documentation": "Amazon Resource Names (ARNs) of the training plans whose reserved capacity\nbacks the optimization job. Bounded to a single plan for now; the list shape\nallows widening to multiple plans in the future without a breaking\nscalar-to-list change.",
+        "smithy.api#length": {
+          "min": 0,
+          "max": 1
+        }
       }
     },
     "com.amazonaws.sagemaker#OptimizationModelAcceptEula": {
@@ -64962,6 +65754,12 @@
           "target": "smithy.api#Unit",
           "traits": {
             "smithy.api#enumValue": "IAM"
+          }
+        },
+        "IDC": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "IDC"
           }
         }
       }
@@ -66307,6 +67105,44 @@
         }
       }
     },
+    "com.amazonaws.sagemaker#PrefixAwareRoutingConcurrencyThreshold": {
+      "type": "integer",
+      "traits": {
+        "smithy.api#range": {
+          "min": 1,
+          "max": 1024
+        }
+      }
+    },
+    "com.amazonaws.sagemaker#PrefixAwareRoutingConfig": {
+      "type": "structure",
+      "members": {
+        "PrefixLength": {
+          "target": "com.amazonaws.sagemaker#PrefixAwareRoutingPrefixLength",
+          "traits": {
+            "smithy.api#documentation": "<p>The maximum length of the prefix used for routing decisions. Required when <code>RoutingStrategy</code> is <code>PREFIX_AWARE</code>.</p> <ul> <li> <p>For the SageMaker Runtime <code>InvokeEndpoint</code> and <code>InvokeEndpointWithResponseStream</code> APIs, this value specifies the number of bytes from the beginning of the request body.</p> </li> <li> <p>For OpenAI-compatible API, this value specifies the number of characters from the text content of the messages array.</p> </li> </ul> <p>The endpoint routes requests that share the same prefix to the same instance. Set this value to cover shared content (such as system prompts) plus enough unique content to distribute workloads across instances.</p>"
+          }
+        },
+        "ConcurrencyThreshold": {
+          "target": "com.amazonaws.sagemaker#PrefixAwareRoutingConcurrencyThreshold",
+          "traits": {
+            "smithy.api#documentation": "<p>The maximum number of in-flight requests on the target instance before the endpoint routes to another instance. Required when <code>RoutingStrategy</code> is <code>PREFIX_AWARE</code>. When in-flight requests on the prefix-selected instance reach this threshold, the endpoint routes the request to an instance with more available capacity.</p>"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "<p>The configuration for prefix-aware routing on a SageMaker real-time inference endpoint. Specify <code>PrefixLength</code> and <code>ConcurrencyThreshold</code> to control routing behavior.</p>"
+      }
+    },
+    "com.amazonaws.sagemaker#PrefixAwareRoutingPrefixLength": {
+      "type": "integer",
+      "traits": {
+        "smithy.api#range": {
+          "min": 1024,
+          "max": 65536
+        }
+      }
+    },
     "com.amazonaws.sagemaker#PresignedDomainUrl": {
       "type": "string"
     },
@@ -66408,16 +67244,14 @@
           "target": "com.amazonaws.sagemaker#ProcessingInstanceCount",
           "traits": {
             "smithy.api#clientOptional": {},
-            "smithy.api#documentation": "<p>The number of ML compute instances to use in the processing job. For distributed processing jobs, specify a value greater than 1. The default value is 1.</p>",
-            "smithy.api#required": {}
+            "smithy.api#documentation": "<p>The number of ML compute instances to use in the processing job. For distributed processing jobs, specify a value greater than 1. The default value is 1.</p>"
           }
         },
         "InstanceType": {
           "target": "com.amazonaws.sagemaker#ProcessingInstanceType",
           "traits": {
             "smithy.api#clientOptional": {},
-            "smithy.api#documentation": "<p>The ML compute instance type for the processing job.</p>",
-            "smithy.api#required": {}
+            "smithy.api#documentation": "<p>The ML compute instance type for the processing job.</p>"
           }
         },
         "VolumeSizeInGB": {
@@ -67308,6 +68142,42 @@
           "target": "smithy.api#Unit",
           "traits": {
             "smithy.api#enumValue": "ml.g7e.48xlarge"
+          }
+        },
+        "ML_G7_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.2xlarge"
+          }
+        },
+        "ML_G7_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.4xlarge"
+          }
+        },
+        "ML_G7_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.8xlarge"
+          }
+        },
+        "ML_G7_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.12xlarge"
+          }
+        },
+        "ML_G7_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.24xlarge"
+          }
+        },
+        "ML_G7_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.48xlarge"
           }
         }
       }
@@ -69941,8 +70811,14 @@
           "target": "com.amazonaws.sagemaker#RoutingStrategy",
           "traits": {
             "smithy.api#clientOptional": {},
-            "smithy.api#documentation": "<p>Sets how the endpoint routes incoming traffic:</p> <ul> <li> <p> <code>LEAST_OUTSTANDING_REQUESTS</code>: The endpoint routes requests to the specific instances that have more capacity to process them.</p> </li> <li> <p> <code>RANDOM</code>: The endpoint routes each request to a randomly chosen instance.</p> </li> </ul>",
+            "smithy.api#documentation": "<p>Sets how the endpoint routes incoming traffic:</p> <ul> <li> <p> <code>LEAST_OUTSTANDING_REQUESTS</code>: The endpoint routes requests to the specific instances that have more capacity to process them.</p> </li> <li> <p> <code>RANDOM</code>: The endpoint routes each request to a randomly chosen instance.</p> </li> <li> <p> <code>PREFIX_AWARE</code>: The endpoint routes requests that share the same prompt prefix to the same instance. When the number of in-flight requests on the selected instance reaches the configured threshold, the endpoint routes the request to an instance with more available capacity.</p> </li> </ul>",
             "smithy.api#required": {}
+          }
+        },
+        "PrefixAwareRoutingConfig": {
+          "target": "com.amazonaws.sagemaker#PrefixAwareRoutingConfig",
+          "traits": {
+            "smithy.api#documentation": "<p>The configuration for prefix-aware routing. Specify this parameter only when you set <code>RoutingStrategy</code> to <code>PREFIX_AWARE</code>.</p>"
           }
         }
       },
@@ -73611,6 +74487,12 @@
           "target": "smithy.api#Unit",
           "traits": {
             "smithy.api#enumValue": "RANDOM"
+          }
+        },
+        "PREFIX_AWARE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "PREFIX_AWARE"
           }
         }
       }
@@ -77544,6 +78426,16 @@
         "smithy.api#output": {}
       }
     },
+    "com.amazonaws.sagemaker#SequenceLength": {
+      "type": "string",
+      "traits": {
+        "smithy.api#length": {
+          "min": 1,
+          "max": 50
+        },
+        "smithy.api#pattern": "^\\d+K$"
+      }
+    },
     "com.amazonaws.sagemaker#ServerlessJobBaseModelArn": {
       "type": "string",
       "traits": {
@@ -77600,6 +78492,12 @@
           "target": "com.amazonaws.sagemaker#EvaluatorArn",
           "traits": {
             "smithy.api#documentation": "<p> The evaluator Amazon Resource Name (ARN) used as reward function or reward prompt. </p>"
+          }
+        },
+        "SequenceLength": {
+          "target": "com.amazonaws.sagemaker#SequenceLength",
+          "traits": {
+            "smithy.api#documentation": "<p> The maximum sequence length, in tokens, that the customization job supports. SageMaker uses this value to select a training configuration for the base model that you specify. The parameter supports the following values: </p> <ul> <li> <p> <code>1K</code> </p> </li> <li> <p> <code>2K</code> </p> </li> <li> <p> <code>4K</code> </p> </li> <li> <p> <code>8K</code> </p> </li> <li> <p> <code>16K</code> </p> </li> <li> <p> <code>32K</code> </p> </li> <li> <p> <code>64K</code> </p> </li> <li> <p> <code>128K</code> </p> </li> </ul> <p> If you don't specify a value, SageMaker selects a training configuration based on the other values that you specify. The selection is not restricted to a particular sequence length. </p>"
           }
         }
       },
@@ -80235,6 +81133,12 @@
           "target": "smithy.api#Unit",
           "traits": {
             "smithy.api#enumValue": "Standard"
+          }
+        },
+        "STANDARD_V2": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "Standard_V2"
           }
         },
         "IN_MEMORY": {
@@ -83169,6 +84073,42 @@
           "traits": {
             "smithy.api#enumValue": "ml.g7e.48xlarge"
           }
+        },
+        "ML_G7_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.2xlarge"
+          }
+        },
+        "ML_G7_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.4xlarge"
+          }
+        },
+        "ML_G7_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.8xlarge"
+          }
+        },
+        "ML_G7_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.12xlarge"
+          }
+        },
+        "ML_G7_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.24xlarge"
+          }
+        },
+        "ML_G7_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g7.48xlarge"
+          }
         }
       }
     },
@@ -85173,6 +86113,54 @@
           "target": "smithy.api#Unit",
           "traits": {
             "smithy.api#enumValue": "ml.g6.48xlarge"
+          }
+        },
+        "ML_G6E_XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g6e.xlarge"
+          }
+        },
+        "ML_G6E_2XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g6e.2xlarge"
+          }
+        },
+        "ML_G6E_4XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g6e.4xlarge"
+          }
+        },
+        "ML_G6E_8XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g6e.8xlarge"
+          }
+        },
+        "ML_G6E_12XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g6e.12xlarge"
+          }
+        },
+        "ML_G6E_16XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g6e.16xlarge"
+          }
+        },
+        "ML_G6E_24XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g6e.24xlarge"
+          }
+        },
+        "ML_G6E_48XLARGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ml.g6e.48xlarge"
           }
         }
       }
@@ -89461,6 +90449,18 @@
           "target": "com.amazonaws.sagemaker#PartnerAppConfig",
           "traits": {
             "smithy.api#documentation": "<p>Configuration settings for the SageMaker Partner AI App.</p>"
+          }
+        },
+        "IdcConfig": {
+          "target": "com.amazonaws.sagemaker#IdcConfigInput",
+          "traits": {
+            "smithy.api#documentation": "<p>Specifies the Amazon Web Services IAM Identity Center configuration for the SageMaker Partner AI App. Specify this parameter when <code>AuthType</code> is <code>IDC</code>. Apps that use <code>IAM</code> authorization don't use this parameter.</p>"
+          }
+        },
+        "AuthType": {
+          "target": "com.amazonaws.sagemaker#PartnerAppAuthType",
+          "traits": {
+            "smithy.api#documentation": "<p>The authorization type that users use to access the SageMaker Partner AI App. Use this parameter to migrate an existing SageMaker Partner AI App from <code>IAM</code> authorization to <code>IDC</code> authorization. Valid values:</p> <ul> <li> <p> <code>IAM</code>: Users access the SageMaker Partner AI App with their Amazon Web Services IAM identity.</p> </li> <li> <p> <code>IDC</code>: Users access the SageMaker Partner AI App with their Amazon Web Services IAM Identity Center identity. Specify the Identity Center instance to use in <code>IdcConfig</code>.</p> </li> </ul>"
           }
         },
         "EnableIamSessionBasedIdentity": {
